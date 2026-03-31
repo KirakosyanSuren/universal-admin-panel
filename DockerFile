@@ -1,0 +1,29 @@
+# Используем официальный PHP образ с FPM
+FROM php:8.2-fpm
+
+# Устанавливаем системные зависимости
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    && docker-php-ext-install pdo_mysql zip
+
+# Устанавливаем Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Устанавливаем рабочую директорию
+WORKDIR /var/www/html
+
+# Копируем файлы проекта в контейнер
+COPY . .
+
+# Устанавливаем зависимости PHP через Composer
+RUN composer install --no-dev --optimize-autoloader
+
+# Открываем порт 9000
+EXPOSE 9000
+
+# Запуск PHP-FPM
+CMD ["php-fpm"]
