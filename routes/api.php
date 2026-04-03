@@ -2,6 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-foreach (glob(app_path('Modules/*/Routes/web.php')) as $routeFile) {
+foreach (glob(app_path('Modules/*/Routes/api.php')) as $routeFile) {
     require $routeFile;
 }
